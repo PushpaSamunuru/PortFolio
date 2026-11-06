@@ -31,7 +31,11 @@ export default function Portfolio() {
 
       {/* Navbar */}
       <nav className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-[#090B18]/85 px-8 py-4 shadow-lg shadow-purple-950/20 backdrop-blur-xl">
-        <h1 className="text-xl font-bold text-indigo-700">Pushpa Samunuru</h1>
+        
+<h1 className="bg-gradient-to-r from-purple-300 to-violet-500 bg-clip-text text-xl font-bold text-transparent">
+  Pushpa Samunuru
+</h1>
+
         <ul className="flex gap-6 text-sm font-medium">
           <li><a href="#about" className="hover:text-indigo-500">About</a></li>
           <li><a href="#skills" className="hover:text-indigo-500">Skills</a></li>
@@ -69,6 +73,10 @@ export default function Portfolio() {
     ease: "easeInOut",
   }}
 />
+  
+{/* HERO TEXT CONTAINER */}
+<div className="relative z-10 flex-1 text-center md:text-left">
+
 
     
 <motion.h2
