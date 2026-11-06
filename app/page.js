@@ -26,9 +26,11 @@ export default function Portfolio() {
   ];
 
   return (
-    <div className="bg-white text-gray-900">
+    
+<div className="min-h-screen overflow-x-hidden bg-[#090B18] text-white">
+
       {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-white shadow z-50 py-4 px-8 flex justify-between items-center">
+      <nav className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-[#090B18]/85 px-8 py-4 shadow-lg shadow-purple-950/20 backdrop-blur-xl">
         <h1 className="text-xl font-bold text-indigo-700">Pushpa Samunuru</h1>
         <ul className="flex gap-6 text-sm font-medium">
           <li><a href="#about" className="hover:text-indigo-500">About</a></li>
@@ -50,7 +52,7 @@ export default function Portfolio() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}>
-      Hi, I'm Pushpa
+      className="mb-4 bg-gradient-to-r from-white via-purple-200 to-violet-500 bg-clip-text text-4xl font-extrabold text-transparent md:text-6xl"
     </motion.h2>
     <motion.p className="text-xl md:text-2xl text-gray-700 mb-6"
       initial={{ opacity: 0 }}
