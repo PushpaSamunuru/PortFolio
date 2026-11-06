@@ -43,18 +43,45 @@ export default function Portfolio() {
       {/* Hero Section with gradient background blobs */}
       <section className="relative min-h-screen flex flex-col md:flex-row items-center justify-between px-6 pt-28 md:pt-40 max-w-6xl mx-auto">
   {/* Background Blobs */}
-  <div className="absolute top-[-100px] left-[-150px] w-[500px] h-[500px] bg-indigo-300 rounded-full opacity-30 blur-3xl animate-pulse z-0" />
-  <div className="absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] bg-pink-300 rounded-full opacity-30 blur-2xl animate-pulse z-0" />
 
-  {/* TEXT ON LEFT */}
-  <div className="z-10 flex-1 text-center md:text-left">
-    <motion.h2 className="text-4xl md:text-6xl font-extrabold mb-4 text-indigo-800"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}>
-      className="mb-4 bg-gradient-to-r from-white via-purple-200 to-violet-500 bg-clip-text text-4xl font-extrabold text-transparent md:text-6xl"
-    </motion.h2>
-    <motion.p className="text-xl md:text-2xl text-gray-700 mb-6"
+<motion.div
+  className="pointer-events-none absolute -left-40 top-10 -z-0 h-[450px] w-[450px] rounded-full bg-purple-600/25 blur-[110px]"
+  animate={{
+    x: [0, 70, 0],
+    y: [0, 40, 0],
+  }}
+  transition={{
+    duration: 12,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+/>
+
+<motion.div
+  className="pointer-events-none absolute -right-32 bottom-0 -z-0 h-[450px] w-[450px] rounded-full bg-indigo-600/25 blur-[110px]"
+  animate={{
+    x: [0, -60, 0],
+    y: [0, -40, 0],
+  }}
+  transition={{
+    duration: 15,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+/>
+
+    
+<motion.h2
+  className="mb-6 bg-gradient-to-r from-white via-purple-200 to-violet-500 bg-clip-text text-5xl font-extrabold leading-tight text-transparent md:text-7xl"
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+>
+  Hi, I'm Pushpa
+</motion.h2>
+
+    <motion.p className="mb-8 text-xl text-slate-300 md:text-2xl"
+
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.4 }}>
