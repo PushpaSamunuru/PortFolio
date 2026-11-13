@@ -605,7 +605,17 @@ export default function Portfolio() {
 
           {/* 3D Avatar */}
           <div className="relative min-w-0">
-            <AvatarStage speaking={speaking} replay={replay} />
+            <video
+              className="h-[400px] w-full rounded-3xl object-cover shadow-[0_0_70px_rgba(139,92,246,0.2)] md:h-[570px]"
+              src="/pushpa-developer-intro.mp4"
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              poster="/portfolio.jpg"
+              aria-label="Animated female developer walking into a purple-lit workstation and waving"
+            />
 
             <div className="relative z-10 mx-auto -mt-5 max-w-md rounded-2xl border border-purple-400/30 bg-[#17122d]/95 p-4 text-center shadow-xl">
               <p className="mb-3 text-sm text-purple-100">
