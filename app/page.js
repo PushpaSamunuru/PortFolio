@@ -1,145 +1,1100 @@
-'use client';
 
-import React from "react";
-import { motion } from "framer-motion";
+"use client";
 
-export default function Portfolio() {
-  const projects = [
-    {
-      title: "AI Monitoring System",
-      description: "Python tools & ML models to detect faults in real-time infrastructure systems.",
-      image: "https://picsum.photos/seed/ai/600/300",
-      github: "#",
-    },
-    {
-      title: "ML Testing Framework",
-      description: "Built robust testing tools to simulate edge cases and validate model reliability.",
-      image: "https://picsum.photos/seed/mltesting/600/300",
-      github: "#",
-    },
-    {
-      title: "Automation Scripts",
-      description: "Developed Python-based automations to parse data and manage enterprise workflows.",
-      image: "https://picsum.photos/seed/automation/600/300",
-      github: "#",
+import React, {
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  Github, Linkedin, Mail, Menu, X, ArrowUpRight,
+  Sparkles, GraduationCap, BriefcaseBusiness, Code2,
+  Volume2, VolumeX, RotateCcw
+} from "lucide-react";
+
+// ==========================================
+// CONTENT — EXISTING PORTFOLIO SECTIONS
+// ==========================================
+
+const skills = [
+  {
+    title: "AI & Machine Learning",
+    items: ["Python", "PyTorch", "TensorFlow", "Scikit-learn", "NLP", "LLMs"]
+  },
+  {
+    title: "Software Engineering",
+    items: ["React", "Next.js", "FastAPI", "SQL", "REST APIs", "Git"]
+  },
+  {
+    title: "Cloud & Automation",
+    items: ["AWS", "Docker", "Azure", "Microsoft 365", "Automation"]
+  }
+];
+
+const experience = [
+  {
+    role: "IT Operations Lead",
+    company: "MedBetterHealth",
+    period: "2026 – Present",
+    description:
+      "IT operations, cloud applications, enterprise integrations, software development, and workflow automation."
+  },
+  {
+    role: "Project Engineer",
+    company: "Wipro",
+    period: "2022 – 2024",
+    description:
+      "Enterprise application development, debugging, software maintenance, and automation."
+  }
+];
+
+const projects = [
+  {
+    title: "AI Monitoring System",
+    description:
+      "Concepts and workflows for intelligent infrastructure monitoring and anomaly detection.",
+    tags: ["Python", "Machine Learning", "Monitoring"]
+  },
+  {
+    title: "ML Testing Framework",
+    description:
+      "Model validation, edge-case testing, and reliability-focused machine learning workflows.",
+    tags: ["Python", "Testing", "ML"]
+  },
+  {
+    title: "Automation Scripts",
+    description:
+      "Python-based data processing and repeatable operational automation.",
+    tags: ["Python", "Automation", "Data"]
+  }
+];
+
+const links = [
+  ["About", "#about"],
+  ["Skills", "#skills"],
+  ["Experience", "#experience"],
+  ["Projects", "#projects"],
+  ["Contact", "#contact"]
+];
+
+const INTRO =
+  "Hi, I'm Pushpa Samunuru! Welcome to my portfolio. " +
+  "I'm passionate about artificial intelligence, " +
+  "machine learning, Python development, and building " +
+  "intelligent software solutions. Feel free to explore my work!";
+
+// ==========================================
+// THREE.JS OBJECT HELPERS
+// ==========================================
+
+function BoxObject({
+  position = [0, 0, 0],
+  args = [1, 1, 1],
+  color = "#ffffff",
+  rotation = [0, 0, 0],
+  emissive = "#000000",
+  intensity = 0
+}) {
+  return (
+    <mesh position={position} rotation={rotation}>
+      <boxGeometry args={args} />
+      <meshStandardMaterial
+        color={color}
+        emissive={emissive}
+        emissiveIntensity={intensity}
+        roughness={0.55}
+        metalness={0.15}
+      />
+    </mesh>
+  );
+}
+
+function SphereObject({
+  position = [0, 0, 0],
+  scale = [1, 1, 1],
+  color = "#ffffff"
+}) {
+  return (
+    <mesh position={position} scale={scale}>
+      <sphereGeometry args={[1, 32, 24]} />
+      <meshStandardMaterial color={color} roughness={0.7} />
+    </mesh>
+  );
+}
+
+function CylinderObject({
+  position = [0, 0, 0],
+  args = [1, 1, 1, 16],
+  color = "#ffffff",
+  rotation = [0, 0, 0]
+}) {
+  return (
+    <mesh position={position} rotation={rotation}>
+      <cylinderGeometry args={args} />
+      <meshStandardMaterial color={color} roughness={0.65} />
+    </mesh>
+  );
+}
+
+// ==========================================
+// WALKING, WAVING, TALKING AVATAR
+// ==========================================
+
+function Avatar({ speaking, replayKey, reducedMotion }) {
+  const root = useRef();
+  const head = useRef();
+  const leftArm = useRef();
+  const rightArm = useRef();
+  const leftLeg = useRef();
+  const rightLeg = useRef();
+  const mouth = useRef();
+  const startTime = useRef(null);
+
+  useEffect(() => {
+    startTime.current = null;
+  }, [replayKey]);
+
+  useFrame(({ clock }, delta) => {
+    if (!root.current) return;
+
+    if (startTime.current === null) {
+      startTime.current = clock.elapsedTime;
     }
-  ];
+
+    const elapsed = clock.elapsedTime - startTime.current;
+    const walkDuration = 2.5;
+    const walking = !reducedMotion && elapsed < walkDuration;
+
+    const progress = reducedMotion
+      ? 1
+      : Math.min(elapsed / walkDuration, 1);
+
+    const eased = 1 - Math.pow(1 - progress, 3);
+
+    // Enter from the right.
+    root.current.position.x = 3.8 + (1.1 - 3.8) * eased;
+
+    // Subtle body movement.
+    root.current.position.y = reducedMotion
+      ? -0.3
+      : -0.3 + (walking
+          ? Math.abs(Math.sin(elapsed * 10)) * 0.045
+          : Math.sin(clock.elapsedTime * 1.5) * 0.015);
+
+    if (leftLeg.current && rightLeg.current) {
+      const stride = walking
+        ? Math.sin(elapsed * 10) * 0.38
+        : 0;
+
+      leftLeg.current.rotation.x = stride;
+      rightLeg.current.rotation.x = -stride;
+    }
+
+    if (leftArm.current && rightArm.current) {
+      const swing = walking
+        ? Math.sin(elapsed * 10) * 0.28
+        : 0;
+
+      leftArm.current.rotation.x = -swing;
+
+      // Right arm waves after walking.
+      const waving =
+        !reducedMotion &&
+        elapsed >= walkDuration &&
+        elapsed < walkDuration + 3.2;
+
+      const targetZ = waving
+        ? -2.45 + Math.sin(elapsed * 9) * 0.18
+        : -0.2;
+
+      rightArm.current.rotation.z +=
+        (targetZ - rightArm.current.rotation.z) *
+        Math.min(delta * 8, 1);
+
+      rightArm.current.rotation.x = swing;
+    }
+
+    if (head.current) {
+      head.current.rotation.y = reducedMotion
+        ? 0
+        : Math.sin(clock.elapsedTime * 0.8) * 0.07;
+    }
+
+    if (mouth.current) {
+      mouth.current.scale.y = speaking
+        ? 0.6 + Math.abs(Math.sin(clock.elapsedTime * 13)) * 1.8
+        : 0.35;
+    }
+  });
 
   return (
-    <div className="bg-white text-gray-900">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-white shadow z-50 py-4 px-8 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-indigo-700">Pushpa Samunuru</h1>
-        <ul className="flex gap-6 text-sm font-medium">
-          <li><a href="#about" className="hover:text-indigo-500">About</a></li>
-          <li><a href="#skills" className="hover:text-indigo-500">Skills</a></li>
-          <li><a href="#projects" className="hover:text-indigo-500">Projects</a></li>
-          <li><a href="#contact" className="hover:text-indigo-500">Contact</a></li>
-        </ul>
+    <group ref={root} position={[3.8, -0.3, 0.55]}>
+      {/* Shoes */}
+      <SphereObject
+        position={[-0.19, -1.73, 0.13]}
+        scale={[0.18, 0.11, 0.31]}
+        color="#e5dcff"
+      />
+      <SphereObject
+        position={[0.19, -1.73, 0.13]}
+        scale={[0.18, 0.11, 0.31]}
+        color="#e5dcff"
+      />
+
+      {/* Animated legs */}
+      <group ref={leftLeg} position={[-0.18, -0.48, 0]}>
+        <CylinderObject
+          position={[0, -0.60, 0]}
+          args={[0.13, 0.15, 1.22, 16]}
+          color="#292444"
+        />
+      </group>
+
+      <group ref={rightLeg} position={[0.18, -0.48, 0]}>
+        <CylinderObject
+          position={[0, -0.60, 0]}
+          args={[0.13, 0.15, 1.22, 16]}
+          color="#292444"
+        />
+      </group>
+
+      {/* Torso */}
+      <CylinderObject
+        position={[0, 0.03, 0]}
+        args={[0.31, 0.25, 1.05, 20]}
+        color="#eee7ff"
+      />
+
+      {/* Left arm */}
+      <group ref={leftArm} position={[-0.36, 0.35, 0]}>
+        <CylinderObject
+          position={[-0.09, -0.41, 0]}
+          args={[0.10, 0.09, 0.88, 16]}
+          color="#eee7ff"
+          rotation={[0, 0, -0.2]}
+        />
+        <SphereObject
+          position={[-0.18, -0.85, 0]}
+          scale={[0.10, 0.14, 0.10]}
+          color="#b9795f"
+        />
+      </group>
+
+      {/* Right waving arm */}
+      <group ref={rightArm} position={[0.36, 0.35, 0]}>
+        <CylinderObject
+          position={[0.09, -0.41, 0]}
+          args={[0.10, 0.09, 0.88, 16]}
+          color="#eee7ff"
+          rotation={[0, 0, 0.2]}
+        />
+        <SphereObject
+          position={[0.18, -0.85, 0]}
+          scale={[0.10, 0.14, 0.10]}
+          color="#b9795f"
+        />
+      </group>
+
+      {/* Head */}
+      <group ref={head} position={[0, 0.87, 0]}>
+        {/* Hair */}
+        <SphereObject
+          position={[0, 0.02, -0.11]}
+          scale={[0.34, 0.43, 0.31]}
+          color="#211626"
+        />
+
+        {/* Face */}
+        <SphereObject
+          position={[0, 0, 0.05]}
+          scale={[0.29, 0.35, 0.27]}
+          color="#bd8067"
+        />
+
+        {/* Long hair */}
+        <SphereObject
+          position={[-0.27, -0.23, -0.09]}
+          scale={[0.13, 0.37, 0.17]}
+          color="#211626"
+        />
+        <SphereObject
+          position={[0.27, -0.23, -0.09]}
+          scale={[0.13, 0.37, 0.17]}
+          color="#211626"
+        />
+
+        {/* Eyes */}
+        <SphereObject
+          position={[-0.105, 0.035, 0.297]}
+          scale={[0.026, 0.033, 0.018]}
+          color="#211626"
+        />
+        <SphereObject
+          position={[0.105, 0.035, 0.297]}
+          scale={[0.026, 0.033, 0.018]}
+          color="#211626"
+        />
+
+        {/* Glasses */}
+        {[-0.11, 0.11].map((x) => (
+          <mesh key={x} position={[x, 0.04, 0.31]}>
+            <torusGeometry args={[0.092, 0.012, 8, 32]} />
+            <meshStandardMaterial color="#171326" />
+          </mesh>
+        ))}
+
+        {/* Animated mouth */}
+        <mesh ref={mouth} position={[0, -0.15, 0.317]}>
+          <sphereGeometry args={[1, 16, 12]} />
+          <meshStandardMaterial color="#693047" />
+          <group />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ==========================================
+// DEVELOPER WORKSTATION
+// ==========================================
+
+function Workstation() {
+  return (
+    <group position={[-0.7, -0.75, -0.35]}>
+      <BoxObject
+        position={[0, -0.14, 0]}
+        args={[2.7, 0.13, 1.15]}
+        color="#29203e"
+      />
+
+      {[-1.1, 1.1].map((x) => (
+        <BoxObject
+          key={x}
+          position={[x, -0.85, 0]}
+          args={[0.12, 1.4, 0.12]}
+          color="#6b5a88"
+        />
+      ))}
+
+      {[-0.55, 0.55].map((x, i) => (
+        <group
+          key={i}
+          position={[x, 0.65, -0.2]}
+          rotation={[0, i === 0 ? 0.13 : -0.13, 0]}
+        >
+          <BoxObject
+            args={[1.13, 0.75, 0.07]}
+            color="#171425"
+          />
+
+          <BoxObject
+            position={[0, 0, 0.043]}
+            args={[1.02, 0.65, 0.015]}
+            color="#171b38"
+            emissive="#35206e"
+            intensity={0.5}
+          />
+
+          {[0, 1, 2, 3, 4].map((line) => (
+            <BoxObject
+              key={line}
+              position={[
+                -0.27 + (line % 2) * 0.08,
+                0.22 - line * 0.105,
+                0.056
+              ]}
+              args={[
+                0.31 + (line % 3) * 0.11,
+                0.018,
+                0.008
+              ]}
+              color={line % 2 ? "#5eead4" : "#c4b5fd"}
+              emissive={line % 2 ? "#5eead4" : "#a78bfa"}
+              intensity={0.8}
+            />
+          ))}
+
+          <BoxObject
+            position={[0, -0.51, 0]}
+            args={[0.07, 0.29, 0.08]}
+            color="#807397"
+          />
+
+          <BoxObject
+            position={[0, -0.67, 0.08]}
+            args={[0.38, 0.04, 0.30]}
+            color="#807397"
+          />
+        </group>
+      ))}
+
+      <BoxObject
+        position={[0, -0.045, 0.36]}
+        args={[0.85, 0.035, 0.28]}
+        color="#5a4b79"
+      />
+    </group>
+  );
+}
+
+// ==========================================
+// CINEMATIC 3D SCENE
+// ==========================================
+
+function SceneContents({ speaking, replayKey, reducedMotion }) {
+  const group = useRef();
+
+  useFrame(({ clock, pointer }) => {
+    if (!group.current || reducedMotion) return;
+
+    group.current.rotation.y +=
+      (pointer.x * 0.07 - group.current.rotation.y) * 0.035;
+
+    group.current.rotation.x +=
+      (-pointer.y * 0.035 - group.current.rotation.x) * 0.035;
+  });
+
+  return (
+    <>
+      <ambientLight intensity={1.6} />
+
+      <directionalLight
+        position={[3, 5, 5]}
+        intensity={3}
+        color="#f5e9ff"
+      />
+
+      <pointLight
+        position={[-2, 2, 2]}
+        intensity={30}
+        distance={9}
+        color="#9b5cff"
+      />
+
+      <pointLight
+        position={[2, 1, -2]}
+        intensity={20}
+        distance={8}
+        color="#4f46e5"
+      />
+
+      <group ref={group}>
+        <Workstation />
+
+        <Avatar
+          speaking={speaking}
+          replayKey={replayKey}
+          reducedMotion={reducedMotion}
+        />
+
+        <CylinderObject
+          position={[0, -2.13, 0]}
+          args={[2.6, 2.6, 0.12, 64]}
+          color="#24163f"
+        />
+      </group>
+    </>
+  );
+}
+
+function HeroScene({ speaking, replayKey }) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <div
+      className="relative h-[420px] w-full md:h-[590px]"
+      role="img"
+      aria-label="Animated 3D developer avatar walking in and waving beside a workstation"
+    >
+      <div className="pointer-events-none absolute inset-8 rounded-full bg-purple-700/25 blur-[85px]" />
+
+      <Canvas
+        camera={{ position: [0, 0.15, 6.9], fov: 42 }}
+        dpr={[1, 1.5]}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance"
+        }}
+        frameloop={reducedMotion ? "demand" : "always"}
+      >
+        <Suspense fallback={null}>
+          <SceneContents
+            speaking={speaking}
+            replayKey={replayKey}
+            reducedMotion={reducedMotion}
+          />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+}
+
+// ==========================================
+// REVEAL ANIMATION
+// ==========================================
+
+function Reveal({ children, className = "" }) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      initial={reducedMotion ? false : { opacity: 0, y: 35 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.7 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ==========================================
+// MAIN PORTFOLIO
+// ==========================================
+
+export default function Portfolio() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [replayKey, setReplayKey] = useState(0);
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+
+  const speechRef = useRef(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const supported =
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window &&
+      "SpeechSynthesisUtterance" in window;
+
+    setSpeechSupported(supported);
+
+    return () => {
+      if (supported) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const stopSpeech = () => {
+    if (typeof window !== "undefined" &&
+        "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    speechRef.current = null;
+    setSpeaking(false);
+  };
+
+  const speak = () => {
+    if (!speechSupported || !voiceEnabled) return;
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(INTRO);
+
+    const voices = window.speechSynthesis.getVoices();
+
+    const indianVoices = voices.filter(
+      (voice) => voice.lang.toLowerCase() === "en-in"
+    );
+
+    const preferredVoice =
+      indianVoices.find((voice) =>
+        /female|woman|heera|veena|priya/i.test(voice.name)
+      ) ||
+      indianVoices[0] ||
+      voices.find((voice) => voice.lang === "en-US") ||
+      voices.find((voice) =>
+        voice.lang.toLowerCase().startsWith("en")
+      );
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+      utterance.lang = preferredVoice.lang;
+    } else {
+      utterance.lang = "en-IN";
+    }
+
+    utterance.rate = 0.92;
+    utterance.pitch = 1.08;
+    utterance.volume = 1;
+
+    utterance.onstart = () => setSpeaking(true);
+
+    utterance.onend = () => {
+      setSpeaking(false);
+      speechRef.current = null;
+    };
+
+    utterance.onerror = () => {
+      setSpeaking(false);
+      speechRef.current = null;
+    };
+
+    speechRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const replayIntroduction = () => {
+    stopSpeech();
+    setReplayKey((key) => key + 1);
+
+    if (voiceEnabled) {
+      speak();
+    }
+  };
+
+  const toggleVoice = () => {
+    if (voiceEnabled) {
+      stopSpeech();
+    }
+    setVoiceEnabled(!voiceEnabled);
+  };
+
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-[#080817] text-white">
+
+      {/* NAVIGATION */}
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080817]/85 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+          <a
+            href="#home"
+            className="text-lg font-bold tracking-wide text-purple-200"
+          >
+            PUSHPA<span className="text-purple-500">.</span>
+          </a>
+
+          <div className="hidden items-center gap-8 md:flex">
+            {links.map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                className="text-sm text-slate-300 transition hover:text-purple-300"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="rounded-lg border border-white/20 p-2 md:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+
+        {menuOpen && (
+          <div className="flex flex-col gap-5 border-t border-white/10 bg-[#101026] px-6 py-6 md:hidden">
+            {links.map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="text-slate-200"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
 
-      {/* Hero Section with gradient background blobs */}
-      <section className="relative min-h-screen flex flex-col md:flex-row items-center justify-between px-6 pt-28 md:pt-40 max-w-6xl mx-auto">
-  {/* Background Blobs */}
-  <div className="absolute top-[-100px] left-[-150px] w-[500px] h-[500px] bg-indigo-300 rounded-full opacity-30 blur-3xl animate-pulse z-0" />
-  <div className="absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] bg-pink-300 rounded-full opacity-30 blur-2xl animate-pulse z-0" />
+      {/* CINEMATIC HERO */}
+      <section
+        id="home"
+        className="relative flex min-h-screen items-center overflow-hidden px-6 pb-16 pt-32"
+      >
+        <div className="pointer-events-none absolute -left-40 top-10 h-[600px] w-[600px] rounded-full bg-purple-800/20 blur-[130px]" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full bg-indigo-800/20 blur-[120px]" />
 
-  {/* TEXT ON LEFT */}
-  <div className="z-10 flex-1 text-center md:text-left">
-    <motion.h2 className="text-4xl md:text-6xl font-extrabold mb-4 text-indigo-800"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}>
-      Hi, I'm Pushpa
-    </motion.h2>
-    <motion.p className="text-xl md:text-2xl text-gray-700 mb-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.4 }}>
-      AI & ML Engineer | Python Enthusiast | Automation Expert
-    </motion.p>
-    <div className="flex gap-4 justify-center md:justify-start">
-      <a href="#projects" className="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">View Projects</a>
-      <a href="#contact" className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-full hover:bg-indigo-100 transition">Contact Me</a>
-    </div>
-  </div>
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-5 lg:grid-cols-2">
+          <Reveal className="relative z-10">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-purple-200">
+              <Sparkles size={15} />
+              AI / SOFTWARE ENGINEER
+            </div>
 
-  {/* IMAGE ON RIGHT */}
- {/* IMAGE ON RIGHT */}
-<div className="z-10 flex-1 flex justify-center md:justify-end mt-10 md:mt-0">
-  <img
-    src="/portfolio.jpg"
-    alt="Pushpa Samunuru"
-    className="w-[300px] md:w-[400px] lg:w-[450px] h-auto max-h-[600px] object-cover rounded-xl shadow-2xl border-4 border-indigo-200"
-  />
-</div>
+            <h1 className="mb-7 font-serif text-6xl leading-[1.05] tracking-tight sm:text-7xl lg:text-[105px]">
+              Pushpa
+              <span className="block bg-gradient-to-r from-purple-200 via-violet-400 to-indigo-400 bg-clip-text text-transparent">
+                Samunuru.
+              </span>
+            </h1>
 
-</section>
+            <h2 className="mb-6 max-w-xl font-serif text-2xl leading-snug text-slate-200 sm:text-3xl">
+              Building intelligent systems and the software that powers them.
+            </h2>
 
-      {/* About Section */}
-      <section id="about" className="py-16 px-6 max-w-4xl mx-auto">
-        <h3 className="text-3xl font-bold mb-4 text-indigo-700">About Me</h3>
-        <p className="text-gray-700 leading-relaxed">
-          I'm passionate about AI and currently transitioning into an AI Engineer role. With a strong foundation in Python, ML model building, automation, and frameworks like TensorFlow and PyTorch, I aim to create intelligent systems that solve real-world problems in NLP, cybersecurity, and human-AI interaction.
-        </p>
-      </section>
+            <p className="mb-9 max-w-lg text-base leading-8 text-slate-400">
+              Computer science professional focused on AI, machine
+              learning, Python development, cloud applications,
+              and intelligent automation.
+            </p>
 
-      {/* Skills Section */}
-      <section id="skills" className="bg-gray-50 py-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h3 className="text-3xl font-bold mb-4 text-indigo-700">Skills</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="bg-white shadow p-4 rounded">Python</div>
-            <div className="bg-white shadow p-4 rounded">TensorFlow</div>
-            <div className="bg-white shadow p-4 rounded">PyTorch</div>
-            <div className="bg-white shadow p-4 rounded">Scikit-learn</div>
-            <div className="bg-white shadow p-4 rounded">Flask / FastAPI</div>
-            <div className="bg-white shadow p-4 rounded">SQL / Pandas</div>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="#projects"
+                className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-7 py-3 font-semibold transition hover:bg-purple-500"
+              >
+                Explore Work <ArrowUpRight size={18} />
+              </a>
+
+              <a
+                href="#contact"
+                className="rounded-full border border-purple-400/40 px-7 py-3 font-semibold text-purple-200 transition hover:bg-purple-500/10"
+              >
+                Let's Connect
+              </a>
+            </div>
+
+            <div className="mt-10 flex gap-6 text-slate-400">
+              <a
+                href="https://github.com/PushpaSamunuru"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="hover:text-purple-300"
+              >
+                <Github />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/s-pushpa"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="hover:text-purple-300"
+              >
+                <Linkedin />
+              </a>
+              <a
+                href="mailto:pushpasamunuru0901@gmail.com"
+                aria-label="Email"
+                className="hover:text-purple-300"
+              >
+                <Mail />
+              </a>
+            </div>
+          </Reveal>
+
+          {/* TALKING AVATAR */}
+          <div className="relative">
+            <HeroScene
+              speaking={speaking}
+              replayKey={replayKey}
+            />
+
+            <div
+              aria-live="polite"
+              className="relative z-10 mx-auto -mt-8 max-w-md rounded-2xl border border-purple-400/30 bg-[#17122d]/90 p-4 text-center shadow-xl shadow-purple-950/30 backdrop-blur-xl"
+            >
+              <p className="mb-3 text-sm leading-6 text-purple-100">
+                {speaking
+                  ? "Hi, I'm Pushpa Samunuru! Welcome to my portfolio."
+                  : "Hi! I'm Pushpa. Click below to meet your virtual guide."}
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={replayIntroduction}
+                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-purple-500"
+                >
+                  <RotateCcw size={16} />
+                  Meet Pushpa
+                </button>
+
+                <button
+                  type="button"
+                  onClick={toggleVoice}
+                  disabled={!speechSupported}
+                  aria-label={voiceEnabled ? "Mute voice" : "Enable voice"}
+                  aria-pressed={voiceEnabled}
+                  className="rounded-full border border-purple-400/40 p-3 text-purple-200 transition hover:bg-purple-500/20 disabled:opacity-40"
+                >
+                  {voiceEnabled
+                    ? <Volume2 size={18} />
+                    : <VolumeX size={18} />}
+                </button>
+
+                {speaking && (
+                  <button
+                    type="button"
+                    onClick={stopSpeech}
+                    className="rounded-full border border-white/20 px-4 py-2 text-sm text-slate-200"
+                  >
+                    Stop
+                  </button>
+                )}
+              </div>
+
+              {!speechSupported && (
+                <p className="mt-3 text-xs text-slate-400">
+                  Voice playback is unavailable in this browser.
+                </p>
+              )}
+
+              {reducedMotion && (
+                <p className="mt-3 text-xs text-slate-400">
+                  Reduced-motion preference is enabled.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-16 px-6 max-w-5xl mx-auto">
-        <h3 className="text-3xl font-bold mb-4 text-indigo-700">Projects</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((project, idx) => (
-            <motion.div
-              key={idx}
-              className="bg-white shadow-md rounded-lg overflow-hidden"
-              whileHover={{ scale: 1.02 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.2 }}
-            >
+      {/* ABOUT — REAL PHOTO */}
+      <section
+        id="about"
+        className="scroll-mt-24 bg-[#0d0d23] px-6 py-28"
+      >
+        <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-2">
+          <Reveal>
+            <div className="relative mx-auto max-w-sm">
+              <div className="absolute inset-4 rounded-3xl bg-purple-600/30 blur-3xl" />
               <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-48 object-cover"
+                src="/portfolio.jpg"
+                alt="Pushpa Samunuru"
+                className="relative w-full rounded-3xl border border-purple-400/30 object-cover shadow-2xl"
               />
-              <div className="p-6">
-                <h4 className="text-xl font-semibold mb-2">{project.title}</h4>
-                <p className="text-sm text-gray-600 mb-3">{project.description}</p>
-                <a href={project.github} className="text-indigo-600 hover:underline text-sm">View on GitHub</a>
-              </div>
-            </motion.div>
-          ))}
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-purple-400">
+              A little about me
+            </p>
+
+            <h2 className="mb-7 font-serif text-5xl md:text-6xl">
+              Hello, I'm <span className="text-purple-300">Pushpa.</span>
+            </h2>
+
+            <p className="mb-5 text-lg leading-9 text-slate-300">
+              I'm a computer science professional with experience
+              in software development, IT operations, cloud applications,
+              and automation.
+            </p>
+
+            <p className="leading-8 text-slate-400">
+              I enjoy developing practical solutions that combine
+              artificial intelligence with reliable software engineering.
+              My interests include machine learning, natural language
+              processing, Python, and intelligent enterprise systems.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="bg-indigo-50 py-16 px-6 text-center">
-        <h3 className="text-3xl font-bold mb-4 text-indigo-700">Get in Touch</h3>
-        <p className="mb-4 text-gray-600">Interested in working together or just want to say hi?</p>
-        <p className="text-lg font-medium text-indigo-800">pushpasamunuru0901@gmail.com</p>
-        <div className="mt-4">
-          <a href="https://www.linkedin.com/in/s-pushpa" target="_blank" className="text-indigo-600 hover:underline">LinkedIn</a>
+      {/* SKILLS */}
+      <section id="skills" className="scroll-mt-24 px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-purple-400">
+              Technologies
+            </p>
+            <h2 className="mb-14 font-serif text-5xl md:text-6xl">
+              My <span className="text-purple-300">toolkit.</span>
+            </h2>
+          </Reveal>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {skills.map((group) => (
+              <Reveal key={group.title}>
+                <div className="h-full rounded-3xl border border-purple-500/20 bg-white/[0.035] p-8 transition duration-300 hover:-translate-y-2 hover:border-purple-400/60 hover:bg-purple-500/10">
+                  <Code2 className="mb-6 text-purple-400" size={30} />
+                  <h3 className="mb-7 text-xl font-semibold">
+                    {group.title}
+                  </h3>
+
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-full border border-white/10 bg-[#171731] px-3 py-2 text-sm text-slate-300"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      <footer className="py-6 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} Pushpa Samunuru. All rights reserved.
+      {/* EXPERIENCE */}
+      <section
+        id="experience"
+        className="scroll-mt-24 bg-[#0d0d23] px-6 py-28"
+      >
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-purple-400">
+              Career
+            </p>
+            <h2 className="mb-14 font-serif text-5xl md:text-6xl">
+              My <span className="text-purple-300">journey.</span>
+            </h2>
+          </Reveal>
+
+          <div className="space-y-6">
+            {experience.map((job) => (
+              <Reveal key={job.company}>
+                <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-8 transition hover:border-purple-500/50">
+                  <BriefcaseBusiness className="mb-5 text-purple-400" />
+
+                  <div className="mb-4 flex flex-wrap justify-between gap-3">
+                    <div>
+                      <h3 className="text-2xl font-semibold">
+                        {job.role}
+                      </h3>
+                      <p className="mt-2 text-purple-300">
+                        {job.company}
+                      </p>
+                    </div>
+                    <span className="text-sm text-slate-400">
+                      {job.period}
+                    </span>
+                  </div>
+
+                  <p className="leading-8 text-slate-400">
+                    {job.description}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* EDUCATION */}
+      <section className="px-6 py-24">
+        <Reveal className="mx-auto max-w-5xl">
+          <GraduationCap
+            className="mb-6 text-purple-400"
+            size={34}
+          />
+
+          <h2 className="mb-8 font-serif text-5xl">
+            Education.
+          </h2>
+
+          <div className="rounded-3xl border border-purple-500/20 bg-white/[0.035] p-8">
+            <h3 className="text-2xl font-semibold">
+              M.S. Computer Science
+            </h3>
+            <p className="mt-3 text-purple-300">
+              Florida Atlantic University
+            </p>
+            <p className="mt-3 text-slate-400">
+              2024 – 2026
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* PROJECTS */}
+      <section
+        id="projects"
+        className="scroll-mt-24 bg-[#0d0d23] px-6 py-28"
+      >
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-purple-400">
+              Selected Work
+            </p>
+
+            <h2 className="mb-6 font-serif text-5xl md:text-6xl">
+              Featured <span className="text-purple-300">projects.</span>
+            </h2>
+
+            <p className="mb-14 text-slate-400">
+              Initial project summaries. Verified case studies and
+              repository links will be added next.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {projects.map((project, index) => (
+              <Reveal key={project.title}>
+                <div className="group h-full overflow-hidden rounded-3xl border border-white/10 bg-[#15152e] transition duration-300 hover:-translate-y-2 hover:border-purple-400/60">
+                  <div className="flex h-48 items-center justify-center bg-gradient-to-br from-purple-900/70 via-indigo-950 to-[#18152c]">
+                    <span className="font-serif text-7xl text-purple-300/60">
+                      0{index + 1}
+                    </span>
+                  </div>
+
+                  <div className="p-7">
+                    <h3 className="mb-4 text-xl font-semibold">
+                      {project.title}
+                    </h3>
+
+                    <p className="mb-7 min-h-28 leading-7 text-slate-400">
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-purple-500/10 px-3 py-1.5 text-xs text-purple-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="scroll-mt-24 px-6 py-32">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <p className="mb-5 text-xs uppercase tracking-[0.3em] text-purple-400">
+            Have an idea?
+          </p>
+
+          <h2 className="mb-8 font-serif text-5xl md:text-7xl">
+            Let's create
+            <span className="block text-purple-300">
+              something remarkable.
+            </span>
+          </h2>
+
+          <p className="mx-auto mb-10 max-w-xl leading-8 text-slate-400">
+            Open to connecting about AI, machine learning,
+            software development, and engineering opportunities.
+          </p>
+
+          <a
+            href="mailto:pushpasamunuru0901@gmail.com"
+            className="inline-flex items-center gap-3 rounded-full bg-purple-600 px-9 py-4 font-semibold transition hover:bg-purple-500"
+          >
+            <Mail size={20} />
+            Get in Touch
+          </a>
+        </Reveal>
+      </section>
+
+      <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-500">
+        © {new Date().getFullYear()} Pushpa Samunuru.
+        All rights reserved.
       </footer>
-    </div>
+    </main>
   );
 }
