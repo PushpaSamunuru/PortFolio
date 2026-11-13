@@ -611,7 +611,12 @@ export default function Portfolio() {
               autoPlay
               muted
               playsInline
-              loop
+              onEnded={(event) => {
+                const video = event.currentTarget;
+                if (Number.isFinite(video.duration) && video.duration > 0.05) {
+                  video.currentTime = video.duration - 0.05;
+                }
+              }}
               preload="metadata"
               poster="/portfolio.jpg"
               aria-label="Animated female developer walking into a purple-lit workstation and waving"
