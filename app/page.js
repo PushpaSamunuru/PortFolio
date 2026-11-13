@@ -414,6 +414,7 @@ function AvatarStage({ speaking, replay }) {
 
 export default function Portfolio() {
   const [speaking, setSpeaking] = useState(false);
+  const [videoIdle, setVideoIdle] = useState(false);
   const [replay, setReplay] = useState(0);
   const [muted, setMuted] = useState(false);
   const [blocked, setBlocked] = useState(false);
@@ -605,13 +606,23 @@ export default function Portfolio() {
 
           {/* 3D Avatar */}
           <div className="relative min-w-0">
+            <style>{`
+              @keyframes cinematicIdle {
+                0%, 100% { transform: scale(1.005) translateY(0); }
+                50% { transform: scale(1.025) translateY(-3px); }
+              }
+              .cinematic-idle { animation: cinematicIdle 5s ease-in-out infinite; transform-origin: center; }
+              @media (prefers-reduced-motion: reduce) { .cinematic-idle { animation: none; } }
+            `}</style>
             <video
-              className="h-[400px] w-full rounded-3xl object-cover shadow-[0_0_70px_rgba(139,92,246,0.2)] md:h-[570px]"
+              className={`h-[400px] w-full rounded-3xl object-cover shadow-[0_0_70px_rgba(139,92,246,0.2)] md:h-[570px] ${videoIdle ? "cinematic-idle" : ""}`}
               src="/pushpa-developer-intro.mp4"
               autoPlay
               muted
               playsInline
+              onPlay={() => setVideoIdle(false)}
               onEnded={(event) => {
+                setVideoIdle(true);
                 const video = event.currentTarget;
                 if (Number.isFinite(video.duration) && video.duration > 0.05) {
                   video.currentTime = video.duration - 0.05;
