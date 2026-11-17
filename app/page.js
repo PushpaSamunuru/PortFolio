@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 
-const skills = ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Flask / FastAPI', 'SQL / Pandas'];
+const skillGroups = [
+  { category: 'Languages & Development', skills: ['Python', 'SQL', 'TypeScript / JavaScript', 'C# / .NET', 'React / Angular'] },
+  { category: 'AI & Machine Learning', skills: ['PyTorch / TensorFlow', 'Scikit-learn', 'NLP & Transformers', 'LLM Applications', 'FAISS / RAG'] },
+  { category: 'Backend & Data', skills: ['FastAPI', 'REST APIs', 'MySQL / SQLite', 'Pandas', 'Supabase'] },
+  { category: 'Cloud, Tools & Automation', skills: ['AWS', 'Docker', 'Git / GitHub', 'Streamlit', 'Workflow Automation'] },
+];
 
 const projects = [
   {
@@ -135,9 +140,18 @@ export default function Portfolio() {
         <div className="mx-auto max-w-6xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Technologies</p>
           <h2 className="mb-9 text-3xl font-bold sm:text-4xl">Skills</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {skills.map(skill => (
-              <div key={skill} className="rounded-xl border border-white/10 bg-white/[0.035] p-5 font-medium text-slate-200">{skill}</div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {skillGroups.map(group => (
+              <div key={group.category} className="rounded-xl border border-white/10 bg-white/[0.035] p-6">
+                <h3 className="mb-5 text-lg font-semibold text-violet-200">{group.category}</h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {group.skills.map(skill => (
+                    <span key={skill} className="rounded-md border border-white/10 bg-[#17142b] px-3 py-2 text-sm text-slate-200">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
