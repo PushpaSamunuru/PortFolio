@@ -5,9 +5,31 @@ import { useState } from 'react';
 const skills = ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Flask / FastAPI', 'SQL / Pandas'];
 
 const projects = [
-  { title: 'AI Monitoring System', description: 'Python tools and machine learning models designed to detect faults in infrastructure systems.' },
-  { title: 'ML Testing Framework', description: 'Testing tools to simulate edge cases and validate machine learning model reliability.' },
-  { title: 'Automation Scripts', description: 'Python automation for parsing data and streamlining enterprise workflows.' },
+  {
+    title: 'CarePilot AI',
+    description: 'Healthcare operations demo for patient intake, AI-style summaries, follow-up workflows, PDF reports, and KPI dashboards.',
+    stack: 'React · TypeScript · Tailwind CSS · jsPDF',
+    github: 'https://github.com/PushpaSamunuru/carepilot-ai',
+    demo: 'https://ai-carepilot.netlify.app/',
+  },
+  {
+    title: 'DocuMind AI',
+    description: 'Privacy-first document intelligence app to chat with multiple PDFs using local AI, FAISS semantic search, and cited answers.',
+    stack: 'Python · Streamlit · Ollama · Gemma 3 · FAISS',
+    github: 'https://github.com/PushpaSamunuru/DocuMind-AI',
+  },
+  {
+    title: 'AI Support Ticket Triage',
+    description: 'NLP system that categorizes support tickets, predicts urgency, flags risky language, and displays confidence scores for human review.',
+    stack: 'FastAPI · Transformers · SQLite · SQLAlchemy',
+    github: 'https://github.com/PushpaSamunuru/ai-support-ticket-triage',
+  },
+  {
+    title: 'Health Insights Agent',
+    description: 'AI-powered app for extracting lab values from blood report PDFs and presenting easy-to-understand health summaries.',
+    stack: 'Python · Streamlit · Groq · Supabase · FAISS',
+    github: 'https://github.com/PushpaSamunuru/Health_Insights_Agent',
+  },
 ];
 
 const nav = [
@@ -87,11 +109,22 @@ export default function Portfolio() {
         <div className="mx-auto max-w-6xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Selected Work</p>
           <h2 className="mb-9 text-3xl font-bold sm:text-4xl">Projects</h2>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2">
             {projects.map(project => (
-              <article key={project.title} className="rounded-xl border border-white/10 bg-[#17142b] p-7">
+              <article key={project.title} className="flex h-full flex-col rounded-xl border border-white/10 bg-[#17142b] p-7">
                 <h3 className="mb-4 text-xl font-semibold">{project.title}</h3>
-                <p className="leading-7 text-slate-400">{project.description}</p>
+                <p className="mb-5 leading-7 text-slate-300">{project.description}</p>
+                <p className="mb-6 text-sm leading-6 text-violet-200">{project.stack}</p>
+                <div className="mt-auto flex flex-wrap gap-4">
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-lg border border-violet-400/50 px-4 py-2 text-sm font-semibold text-violet-200 transition hover:bg-white/5">
+                    View on GitHub ↗
+                  </a>
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500">
+                      Live Demo ↗
+                    </a>
+                  )}
+                </div>
               </article>
             ))}
           </div>
