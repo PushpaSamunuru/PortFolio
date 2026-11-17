@@ -87,10 +87,9 @@ export default function Portfolio() {
             <a href="#projects" className="rounded-lg bg-violet-600 px-6 py-3 font-semibold text-white transition hover:bg-violet-500">Explore Projects</a>
             <a href="#contact" className="rounded-lg border border-violet-400/50 px-6 py-3 font-semibold text-violet-200 transition hover:bg-white/5">Contact Me</a>
             <div className="flex flex-col items-start gap-1">
-              <button type="button" disabled aria-label="Download Resume — resume PDF not yet available" title="Resume PDF coming soon" className="cursor-not-allowed rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-slate-400">
+              <a href="/Pushpa_Resume.pdf" download="Pushpa_Samunuru_Resume.pdf" className="rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-slate-200 transition hover:border-violet-400/50 hover:bg-white/10">
                 Download Resume
-              </button>
-              <span className="text-xs text-slate-500">PDF coming soon</span>
+              </a>
             </div>
           </div>
           </div>
