@@ -60,9 +60,12 @@ export default function Portfolio() {
         <div className="mx-auto max-w-6xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Introduction</p>
           <h2 className="mb-7 text-3xl font-bold sm:text-4xl">About Me</h2>
-          <p className="max-w-3xl text-lg leading-9 text-slate-300">
-            I'm passionate about AI and currently transitioning into an AI Engineer role. With a strong foundation in Python, ML model building, automation, and frameworks like TensorFlow and PyTorch, I aim to create intelligent systems that solve real-world problems in NLP, cybersecurity, and human-AI interaction.
-          </p>
+          <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_300px]">
+            <p className="max-w-3xl text-lg leading-9 text-slate-300">
+              I'm passionate about AI and currently transitioning into an AI Engineer role. With a strong foundation in Python, ML model building, automation, and frameworks like TensorFlow and PyTorch, I aim to create intelligent systems that solve real-world problems in NLP, cybersecurity, and human-AI interaction.
+            </p>
+            <img src="/portfolio.jpg" alt="Pushpa Samunuru" className="w-full max-w-[300px] rounded-2xl border border-white/10 object-cover shadow-xl" />
+          </div>
         </div>
       </section>
 
