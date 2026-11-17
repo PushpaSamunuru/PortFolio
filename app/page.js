@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const skillGroups = [
   { category: 'Languages & Development', skills: ['Python', 'SQL', 'TypeScript / JavaScript', 'C# / .NET', 'React / Angular'] },
@@ -52,6 +52,16 @@ const nav = [
 
 export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
+
+  useEffect(() => {
+    if (!resumeOpen) return;
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setResumeOpen(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [resumeOpen]);
 
   return (
     <main className="min-h-screen bg-[#0b0a16] text-slate-100">
@@ -87,9 +97,9 @@ export default function Portfolio() {
             <a href="#projects" className="rounded-lg bg-violet-600 px-6 py-3 font-semibold text-white transition hover:bg-violet-500">Explore Projects</a>
             <a href="#contact" className="rounded-lg border border-violet-400/50 px-6 py-3 font-semibold text-violet-200 transition hover:bg-white/5">Contact Me</a>
             <div className="flex flex-col items-start gap-1">
-              <a href="/Pushpa_Resume.pdf" download="Pushpa_Samunuru_Resume.pdf" className="rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-slate-200 transition hover:border-violet-400/50 hover:bg-white/10">
-                Download Resume
-              </a>
+              <button type="button" onClick={() => setResumeOpen(true)} className="rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-slate-200 transition hover:border-violet-400/50 hover:bg-white/10">
+                Preview Resume
+              </button>
             </div>
           </div>
           </div>
@@ -214,6 +224,28 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      {resumeOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-3 sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) setResumeOpen(false); }}>
+          <div role="dialog" aria-modal="true" aria-labelledby="resume-dialog-title" className="flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-violet-400/30 bg-[#100e20] shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
+              <h2 id="resume-dialog-title" className="text-lg font-semibold text-white">Resume Preview</h2>
+              <div className="flex items-center gap-3">
+                <a href="/Pushpa_Resume.pdf" download="Pushpa_Samunuru_Resume.pdf" className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500">
+                  Download Resume
+                </a>
+                <button type="button" autoFocus onClick={() => setResumeOpen(false)} aria-label="Close resume preview" className="rounded-lg border border-white/20 px-3 py-2 text-sm text-slate-100 transition hover:bg-white/10">
+                  Close ✕
+                </button>
+              </div>
+            </div>
+            <iframe src="/Pushpa_Resume.pdf#toolbar=0" title="Pushpa Samunuru Resume PDF Preview" className="min-h-0 w-full flex-1 bg-white" />
+            <p className="px-4 py-2 text-center text-xs text-slate-400">
+              If the preview is unavailable in your browser, <a href="/Pushpa_Resume.pdf" target="_blank" rel="noopener noreferrer" className="text-violet-300 underline">open the PDF in a new tab</a>.
+            </p>
+          </div>
+        </div>
+      )}
 
       <footer className="border-t border-white/10 px-6 py-7 text-center text-sm text-slate-500">
         © {new Date().getFullYear()} Pushpa Samunuru. All rights reserved.
