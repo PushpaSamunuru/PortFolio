@@ -231,7 +231,7 @@ export default function Portfolio() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
               <h2 id="resume-dialog-title" className="text-lg font-semibold text-white">Resume Preview</h2>
               <div className="flex items-center gap-3">
-                <a href="/Pushpa_Resume.pdf" download="Pushpa_Samunuru_Resume.pdf" className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500">
+                <a href="/PUSHPA_SAMUNURU.pdf" download="Pushpa_Samunuru_Resume.pdf" className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500">
                   Download Resume
                 </a>
                 <button type="button" autoFocus onClick={() => setResumeOpen(false)} aria-label="Close resume preview" className="rounded-lg border border-white/20 px-3 py-2 text-sm text-slate-100 transition hover:bg-white/10">
@@ -239,9 +239,9 @@ export default function Portfolio() {
                 </button>
               </div>
             </div>
-            <iframe src="/Pushpa_Resume.pdf#toolbar=0" title="Pushpa Samunuru Resume PDF Preview" className="min-h-0 w-full flex-1 bg-white" />
+            <iframe src="/PUSHPA_SAMUNURU.pdf#toolbar=0" title="Pushpa Samunuru Resume PDF Preview" className="min-h-0 w-full flex-1 bg-white" />
             <p className="px-4 py-2 text-center text-xs text-slate-400">
-              If the preview is unavailable in your browser, <a href="/Pushpa_Resume.pdf" target="_blank" rel="noopener noreferrer" className="text-violet-300 underline">open the PDF in a new tab</a>.
+              If the preview is unavailable in your browser, <a href="/PUSHPA_SAMUNURU.pdf" target="_blank" rel="noopener noreferrer" className="text-violet-300 underline">open the PDF in a new tab</a>.
             </p>
           </div>
         </div>
