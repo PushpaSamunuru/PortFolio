@@ -39,6 +39,7 @@ const projects = [
 const nav = [
   ['About', '#about'],
   ['Skills', '#skills'],
+  ['Experience', '#experience'],
   ['Projects', '#projects'],
   ['Contact', '#contact'],
 ];
@@ -105,6 +106,27 @@ export default function Portfolio() {
             {skills.map(skill => (
               <div key={skill} className="rounded-xl border border-white/10 bg-white/[0.035] p-5 font-medium text-slate-200">{skill}</div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" className="scroll-mt-24 border-t border-white/10 bg-[#100e20] px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Professional Background</p>
+          <h2 className="mb-9 text-3xl font-bold sm:text-4xl">Experience</h2>
+          <div className="grid gap-5 md:grid-cols-2">
+            <article className="rounded-xl border border-white/10 bg-[#17142b] p-6">
+              <p className="mb-2 text-sm font-medium text-violet-300">2026 – Present</p>
+              <h3 className="text-xl font-semibold">IT Operations Lead</h3>
+              <p className="mt-1 text-slate-300">MedBetterHealth</p>
+              <p className="mt-3 text-sm leading-7 text-slate-400">Support IT operations, workflow automation, and technology improvements for healthcare services.</p>
+            </article>
+            <article className="rounded-xl border border-white/10 bg-[#17142b] p-6">
+              <p className="mb-2 text-sm font-medium text-violet-300">2022 – 2024</p>
+              <h3 className="text-xl font-semibold">Project Engineer</h3>
+              <p className="mt-1 text-slate-300">Wipro</p>
+              <p className="mt-3 text-sm leading-7 text-slate-400">Worked on application development and automation using .NET, Angular, MySQL, and Python.</p>
+            </article>
           </div>
         </div>
       </section>
