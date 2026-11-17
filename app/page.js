@@ -43,9 +43,10 @@ const projects = [
 
 const nav = [
   ['About', '#about'],
-  ['Skills', '#skills'],
   ['Experience', '#experience'],
+  ['Skills', '#skills'],
   ['Projects', '#projects'],
+  ['Education', '#education'],
   ['Contact', '#contact'],
 ];
 
@@ -85,6 +86,12 @@ export default function Portfolio() {
           <div className="flex flex-wrap gap-4">
             <a href="#projects" className="rounded-lg bg-violet-600 px-6 py-3 font-semibold text-white transition hover:bg-violet-500">Explore Projects</a>
             <a href="#contact" className="rounded-lg border border-violet-400/50 px-6 py-3 font-semibold text-violet-200 transition hover:bg-white/5">Contact Me</a>
+            <div className="flex flex-col items-start gap-1">
+              <button type="button" disabled aria-label="Download Resume — resume PDF not yet available" title="Resume PDF coming soon" className="cursor-not-allowed rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-slate-400">
+                Download Resume
+              </button>
+              <span className="text-xs text-slate-500">PDF coming soon</span>
+            </div>
           </div>
           </div>
           <div className="mx-auto w-full max-w-[350px] lg:mx-0">
@@ -98,7 +105,7 @@ export default function Portfolio() {
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Introduction</p>
           <h2 className="mb-7 text-3xl font-bold sm:text-4xl">About Me</h2>
           <p className="max-w-3xl text-lg leading-9 text-slate-300">
-            I'm passionate about AI and currently transitioning into an AI Engineer role. With a strong foundation in Python, ML model building, automation, and frameworks like TensorFlow and PyTorch, I aim to create intelligent systems that solve real-world problems in NLP, cybersecurity, and human-AI interaction.
+            I'm a software engineer with experience in enterprise application development, IT operations, and workflow automation. I work with Python, web technologies, and machine learning tools to build practical solutions. My AI projects include document intelligence, support ticket classification, and healthcare workflow applications. I enjoy turning complex problems into reliable, user-focused software.
           </p>
         </div>
       </section>
@@ -179,6 +186,19 @@ export default function Portfolio() {
                 </div>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="education" className="scroll-mt-24 px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Academic Background</p>
+          <h2 className="mb-9 text-3xl font-bold sm:text-4xl">Education</h2>
+          <div className="max-w-3xl rounded-xl border border-white/10 bg-white/[0.035] p-7">
+            <p className="mb-2 text-sm font-medium text-violet-300">2024 – 2026</p>
+            <h3 className="text-xl font-semibold text-white">Master of Science in Computer Science</h3>
+            <p className="mt-2 text-slate-200">Florida Atlantic University</p>
+            <p className="mt-4 text-sm text-slate-400">GPA: 3.96 / 4.00 · Graduated 2026</p>
           </div>
         </div>
       </section>
