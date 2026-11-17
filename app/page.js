@@ -12,7 +12,7 @@ const skillGroups = [
 const projects = [
   {
     title: 'CarePilot AI',
-    image: '/project-images/carepilot-ai.webp',
+
     description: 'Healthcare operations demo for patient intake, AI-style summaries, follow-up workflows, PDF reports, and KPI dashboards.',
     stack: 'React · TypeScript · Tailwind CSS · jsPDF',
     github: 'https://github.com/PushpaSamunuru/carepilot-ai',
@@ -20,21 +20,21 @@ const projects = [
   },
   {
     title: 'DocuMind AI',
-    image: '/project-images/documind-ai.webp',
+
     description: 'Privacy-first document intelligence app to chat with multiple PDFs using local AI, FAISS semantic search, and cited answers.',
     stack: 'Python · Streamlit · Ollama · Gemma 3 · FAISS',
     github: 'https://github.com/PushpaSamunuru/DocuMind-AI',
   },
   {
     title: 'AI Support Ticket Triage',
-    image: '/project-images/ai-support-ticket-triage.webp',
+
     description: 'NLP system that categorizes support tickets, predicts urgency, flags risky language, and displays confidence scores for human review.',
     stack: 'FastAPI · Transformers · SQLite · SQLAlchemy',
     github: 'https://github.com/PushpaSamunuru/ai-support-ticket-triage',
   },
   {
     title: 'Health Insights Agent',
-    image: '/project-images/health-insights-agent.webp',
+
     description: 'AI-powered app for extracting lab values from blood report PDFs and presenting easy-to-understand health summaries.',
     stack: 'Python · Streamlit · Groq · Supabase · FAISS',
     github: 'https://github.com/PushpaSamunuru/Health_Insights_Agent',
@@ -161,32 +161,21 @@ export default function Portfolio() {
         <div className="mx-auto max-w-6xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-violet-300">Selected Work</p>
           <h2 className="mb-9 text-3xl font-bold sm:text-4xl">Projects</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {projects.map(project => (
-              <article key={project.title} className="group relative min-h-[340px] overflow-hidden rounded-2xl border border-white/10 bg-[#17142b] focus-within:border-violet-400/60">
-                <img
-                  src={project.image}
-                  alt={project.title + ' project illustration'}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105 group-focus-within:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#090819] via-[#090819]/65 to-transparent transition duration-300 md:group-hover:bg-[#090819]/85 md:group-focus-within:bg-[#090819]/85" />
-                <div className="relative flex min-h-[340px] flex-col justify-end p-6 sm:p-7">
-                  <h3 className="text-xl font-bold text-white drop-shadow-md">{project.title}</h3>
-                  <div className="mt-3 md:max-h-0 md:overflow-hidden md:opacity-0 md:transition-all md:duration-300 md:group-hover:max-h-52 md:group-hover:opacity-100 md:group-focus-within:max-h-52 md:group-focus-within:opacity-100">
-                    <p className="text-sm leading-6 text-slate-100">{project.description}</p>
-                    <p className="mt-3 text-xs leading-5 text-violet-200">{project.stack}</p>
-                  </div>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-violet-300/60 bg-[#17142b]/90 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-300">
-                      View on GitHub ↗
+              <article key={project.title} className="flex flex-col rounded-xl border border-white/10 bg-[#17142b] p-7">
+                <h3 className="mb-4 text-xl font-semibold text-white">{project.title}</h3>
+                <p className="mb-4 leading-7 text-slate-300">{project.description}</p>
+                <p className="mb-6 text-sm text-violet-200">{project.stack}</p>
+                <div className="mt-auto flex flex-wrap gap-3">
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-violet-400/50 px-4 py-2 text-sm font-semibold text-violet-200 hover:bg-white/5">
+                    View on GitHub ↗
+                  </a>
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500">
+                      Live Demo ↗
                     </a>
-                    {project.demo && (
-                      <a href={project.demo} target="_blank" rel="noopener noreferrer" className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-300">
-                        Live Demo ↗
-                      </a>
-                    )}
-                  </div>
+                  )}
                 </div>
               </article>
             ))}
