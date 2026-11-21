@@ -11,6 +11,12 @@ const skillGroups = [
 
 const projects = [
   {
+    title: 'CareGuard AI',
+    description: 'Rule-based healthcare call-summary verification prototype that flags selected unsupported symptom claims, contradictions, category mismatches, and uncertain summaries for human review.',
+    stack: 'Python · FastAPI · Pydantic · Pytest · REST API',
+    github: 'https://github.com/PushpaSamunuru/careguard-ai',
+  },
+  {
     title: 'CarePilot AI',
 
     description: 'Healthcare operations demo for patient intake, AI-style summaries, follow-up workflows, PDF reports, and KPI dashboards.',
